@@ -6,7 +6,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update -qy
 apt-get upgrade -qy
-apt-get install -qy locales lsb-release curl gnupg2 less vim htop
+apt-get install -qy locales lsb-release curl gnupg2 less vim htop tree
 
 # global shell configuration
 sed -i 's/# "\\e\[5~": history-search-backward/"\\e\[5~": history-search-backward/g' /etc/inputrc
@@ -25,13 +25,11 @@ sed -i 's/"set background=dark/set background=dark/g' /etc/vim/vimrc
 # shell settings for root
 source /setup/root-bashrc.sh >> /root/.bashrc
 
-# vim settings for root
-echo 'set mouse-=a' > /root/.vimrc
-
 cp /etc/skel/configure-git.sh /root/
 
 # set password 'admin' for the root user
 echo 'root:admin' | chpasswd
 
 # cleanup
+rm -f /services/log/.gitignore
 source /setup/cleanup-image.sh
