@@ -4,13 +4,15 @@
 # PID 1; otherwise it might damage your system
 [[ $$ -eq 1 ]] || exit 1
 
+set -m
+
 # define the initlog function for the init process
 source /services/initlog
 
 
-initlog -- '\n----------------------------------------\n'
+initlog -- '\n--------------------------------------------------------------------------------\n'
 initlog 'Init started with PID %s\n' $$
-initlog -- '----------------------------------------\n\n'
+initlog -- '--------------------------------------------------------------------------------\n\n'
 
 
 # kill the keep-alive process when SIGTERM is catched
@@ -32,7 +34,7 @@ trap 'on_exit' EXIT
 for SVC in $(find /services/svc -mindepth 1 -maxdepth 1 -type d | sort) ; do
     SVCNAME=$(basename $SVC)
 
-    initlog -- '----------------------------------------\n'
+    initlog -- '--------------------------------------------------------------------------------\n'
     initlog 'Service %s\n' $SVCNAME
 
     BEFORE="$SVC/before_start.sh"
@@ -43,26 +45,27 @@ for SVC in $(find /services/svc -mindepth 1 -maxdepth 1 -type d | sort) ; do
     touch $LOG && chmod 666 $LOG
 
     if [[ -x $BEFORE ]] ; then
-        $BEFORE $LOG &> $LOG
+        $BEFORE $LOG &>> $LOG
     elif [[ -f $BEFORE ]] ; then
         initlog '  Script %s is not executable: SKIPPED\n' $BEFORE
     fi
 
     if [[ -x $START ]] ; then
-        $START $LOG &> $LOG &
+        $START $LOG &>> $LOG &
         initlog '  Started %s PID: %s\n' $START $!
+        initlog '  log file:       %s\n' $LOG
     elif [[ -f $START ]] ; then
         initlog '  Script %s is not executable: SKIPPED\n' $START
     fi
 
     if [[ -x $AFTER ]] ; then
-        $AFTER $LOG &> $LOG
+        $AFTER $LOG
     elif [[ -f $AFTER ]] ; then
         initlog '  Script %s is not executable: SKIPPED\n' $AFTER
     fi
 done
 
-initlog -- '----------------------------------------\n\n'
+initlog -- '--------------------------------------------------------------------------------\n\n'
 
 # keep the container alive until SIGTERM is received
 ln -snf /bin/sleep /usr/local/bin/keepalive

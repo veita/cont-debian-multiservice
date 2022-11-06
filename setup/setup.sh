@@ -27,9 +27,6 @@ source /setup/root-bashrc.sh >> /root/.bashrc
 
 cp /etc/skel/configure-git.sh /root/
 
-# set password 'admin' for the root user
-echo 'root:admin' | chpasswd
-
 # cleanup
 rm -f /services/log/.gitignore
 source /setup/cleanup-image.sh
