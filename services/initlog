@@ -6,3 +6,6 @@ chmod 644 /services/log/init.log
 function initlog() {
     printf "$@" | tee -a /services/log/init.log
 }
+
+printenv >> /services/log/init.log
+
