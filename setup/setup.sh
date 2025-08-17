@@ -20,7 +20,7 @@ else
     echo 'root:admin' | chpasswd
 fi
 
-apt-get purge -qy systemd
+apt-get purge -qy --allow-remove-essential systemd systemd-sysv systemd-standalone-sysusers
 apt-get autoremove -qy
 
 # global shell configuration
