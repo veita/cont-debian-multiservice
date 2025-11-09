@@ -21,5 +21,4 @@ buildah config --cmd '["/services/init.sh"]' $CONT
 buildah config --author "Alexander Veit" $CONT
 buildah config --label commit=$(git describe --always --tags --dirty=-dirty) $CONT
 
-buildah commit --rm $CONT localhost/debian-multiservice-${SUITE}:latest
-
+buildah commit --rm $CONT localhost/debian-multiservice:${SUITE}
